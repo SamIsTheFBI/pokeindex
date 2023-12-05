@@ -1,10 +1,6 @@
 import { TbPokeball } from "react-icons/tb";
-import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Autocomplete, Burger, Grid, Group, SimpleGrid, Skeleton, Stack, Text, Title } from '@mantine/core';
-import { Card, Image, Badge, Button } from '@mantine/core';
-import { useState, useRef } from "react";
-import { useInView } from "framer-motion"
-import { IoShareOutline } from "react-icons/io5";
+import { AppShell, Button, Group, SimpleGrid, Text, Title } from '@mantine/core';
+import { useState } from "react";
 import { VscGithubAlt } from "react-icons/vsc";
 
 import { PokemonCard } from "~/components"
@@ -19,21 +15,8 @@ export const getServerSideProps = async () => {
 };
 
 export default function Home({ data }: { data: any }) {
-  const [opened, { toggle }] = useDisclosure();
 
-  const [res, setRes] = useState<any>(data?.next);
-  const [pokemons, setPokemons] = useState<any>(data.results);
-
-  const fetchPokemons = async (url: string) => {
-    const res = await fetch(url);
-    const data = await res.json();
-    setRes(data.next);
-    if (pokemons.length !== 0) {
-      setPokemons([...pokemons, ...data.results]);
-      return;
-    }
-    setPokemons(data.results);
-  };
+  const [pokemons] = useState<any>(data.results);
 
   return (
     <AppShell

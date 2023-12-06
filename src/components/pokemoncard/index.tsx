@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Card, Center, Group, Stack, Text } from "@mantine/core";
+import { Badge, Button, Card, Center, Group, Stack, Text } from "@mantine/core";
 import Image from "next/image"
 import { useEffect, useState } from "react";
 export const typeColor = {

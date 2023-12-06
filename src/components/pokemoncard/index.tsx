@@ -1,4 +1,5 @@
-import { Badge, Button, Card, Group, Image, Stack, Text } from "@mantine/core";
+import { Badge, Box, Button, Card, Center, Group, Stack, Text } from "@mantine/core";
+import Image from "next/image"
 import { useEffect, useState } from "react";
 export const typeColor = {
   fire: "orange",
@@ -37,12 +38,16 @@ export default function PokemonCard({ name, key }: { name: string, key: number }
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder key={key}>
       <Card.Section>
-        <Image
-          src={pokemon?.sprites?.other["official-artwork"].front_default}
-          height={160}
-          fit="contain"
-          alt="Pokemon Image"
-        />
+        <Center>
+          <Image
+            src={pokemon?.sprites?.other["official-artwork"].front_default}
+            height={160}
+            width={160}
+            quality={70}
+            objectFit="contain"
+            alt="Pokemon Image"
+          />
+        </Center>
       </Card.Section>
 
       <Stack justify="center" align="center" my="xs" gap="xs">
@@ -60,7 +65,7 @@ export default function PokemonCard({ name, key }: { name: string, key: number }
         </Group>
       </Stack>
 
-      <Button color="teal.4" fullWidth mt="xs" radius="md">
+      <Button color="teal.4" fullWidth mt="xs" mx="sm" radius="md">
         Check Stats
       </Button>
     </Card>

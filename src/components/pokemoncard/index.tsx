@@ -1,11 +1,11 @@
-import { Badge, Button, Card, Center, Group, Stack, Text } from "@mantine/core";
+import { Badge, Button, Card, Center, Group, Skeleton, Stack, Text } from "@mantine/core";
 import { IoStatsChartSharp } from "react-icons/io5";
 import Image from "next/image"
 import { useEffect, useState } from "react";
 export const typeColor = {
   fire: "orange",
   grass: "green",
-  electric: "#FFF3BF",
+  electric: "#ffce6b",
   water: "blue",
   ground: "yellow",
   rock: "#ca8a04",
@@ -23,7 +23,7 @@ export const typeColor = {
 };
 
 
-export default function PokemonCard({ name, key }: { name: string, key: number }) {
+export default function PokemonCard({ name }: { name: string }) {
   const [pokemon, setPokemon] = useState<any>({});
 
   useEffect(() => {
@@ -31,23 +31,27 @@ export default function PokemonCard({ name, key }: { name: string, key: number }
       const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       const data = await resp.json();
       setPokemon(data);
-      console.log(pokemon)
     };
     getPokemon();
   }, [name]);
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder key={key}>
+    <Card shadow="sm" padding="lg" radius="md" withBorder key={pokemon.id}>
       <Card.Section p="xs">
         <Center>
-          <Image
-            src={pokemon?.sprites?.other["official-artwork"].front_default}
-            height={160}
-            width={160}
-            quality={80}
-            objectFit="contain"
-            alt="Pokemon Image"
-          />
+          {
+            pokemon?.sprites?.other["official-artwork"].front_default &&
+            <Image
+              src={pokemon?.sprites?.other["official-artwork"].front_default}
+              height={160}
+              width={160}
+              quality={80}
+              object-fit="contain"
+              alt="Pokemon Image"
+            />
+            ||
+            <Skeleton height={160} width={160} />
+          }
         </Center>
       </Card.Section>
 
@@ -62,7 +66,7 @@ export default function PokemonCard({ name, key }: { name: string, key: number }
               {pokemon.types && pokemon.types.map(({ type }: any) => {
                 const typeName: keyof typeof typeColor = type.name.toString()
                 return (
-                  <Badge color={`${typeColor[typeName]}`} size="sm" radius="sm" >{type.name}</Badge>
+                  <Badge color={`${typeColor[typeName]}`} size="sm" radius="sm" key={type.name}>{type.name}</Badge>
                 )
               })}
             </Group>

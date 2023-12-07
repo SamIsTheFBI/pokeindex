@@ -1,4 +1,5 @@
 import { Badge, Button, Card, Center, Group, Stack, Text } from "@mantine/core";
+import { IoStatsChartSharp } from "react-icons/io5";
 import Image from "next/image"
 import { useEffect, useState } from "react";
 export const typeColor = {
@@ -37,37 +38,42 @@ export default function PokemonCard({ name, key }: { name: string, key: number }
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder key={key}>
-      <Card.Section>
+      <Card.Section p="xs">
         <Center>
           <Image
             src={pokemon?.sprites?.other["official-artwork"].front_default}
             height={160}
             width={160}
-            quality={70}
+            quality={80}
             objectFit="contain"
             alt="Pokemon Image"
           />
         </Center>
       </Card.Section>
 
-      <Stack justify="center" align="center" my="xs" gap="xs">
-        <Stack justify="center" align="center" gap={0}>
-          <Text fw={500} tt="capitalize">{name}</Text>
-          <Text size="sm" c="dimmed">{`#${pokemon.id?.toString().padStart(4, '0')}`}</Text>
-        </Stack>
-        <Group justify="center" gap={6} align="center">
-          {pokemon.types && pokemon.types.map(({ type }: any) => {
-            const typeName: keyof typeof typeColor = type.name.toString()
-            return (
-              <Badge color={`${typeColor[typeName]}`} size="sm" radius="sm" >{type.name}</Badge>
-            )
-          })}
-        </Group>
-      </Stack>
+      <Card.Section>
+        <Stack justify="space-between" align="stretch" p="xs">
+          <Stack justify="center" align="center" my="xs" gap="xs">
+            <Stack justify="center" align="center" gap={0}>
+              <Text fw={500} tt="capitalize">{name}</Text>
+              <Text size="sm" c="dimmed">{`#${pokemon.id?.toString().padStart(4, '0')}`}</Text>
+            </Stack>
+            <Group justify="center" gap={6} align="center">
+              {pokemon.types && pokemon.types.map(({ type }: any) => {
+                const typeName: keyof typeof typeColor = type.name.toString()
+                return (
+                  <Badge color={`${typeColor[typeName]}`} size="sm" radius="sm" >{type.name}</Badge>
+                )
+              })}
+            </Group>
+          </Stack>
 
-      <Button color="teal.4" fullWidth mt="xs" mx="sm" radius="md">
-        Check Stats
-      </Button>
+          <Button size="md" color="teal.4" fullWidth mt="xs" radius="md" rightSection={<IoStatsChartSharp />}>
+            Stats
+          </Button>
+        </Stack>
+
+      </Card.Section>
     </Card>
   )
 }

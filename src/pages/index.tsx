@@ -1,5 +1,5 @@
 import { TbPokeball } from "react-icons/tb";
-import { AppShell, Button, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { AppShell, Button, Center, Group, Loader, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { useState } from "react";
 import { VscGithubAlt } from "react-icons/vsc";
 
@@ -42,11 +42,14 @@ export default function Home({ data }: { data: any }) {
             A simple Pokedex-like web app that uses the PokeAPI to display information on different Pokemon. Made with NextJS & Mantine.
           </Text>
         </Stack>
-        <SimpleGrid cols={{ base: 2, xs: 4, md: 6 }}>
-          {pokemons.map((pokemon: any, idx: number) => {
+        <SimpleGrid cols={{ base: 2, xs: 3, md: 6 }}>
+          {pokemons.length !== 0 && pokemons.map((pokemon: any, idx: number) => {
             return <PokemonCard name={pokemon.name} key={idx} />
           })}
         </SimpleGrid>
+        <Center p="xl">
+          <Loader color="cyan" type="bars" />
+        </Center>
       </AppShell.Main>
     </AppShell>
   );

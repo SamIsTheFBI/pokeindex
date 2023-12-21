@@ -2,6 +2,7 @@ import { Badge, Button, Card, Center, Group, Skeleton, Stack, Text } from "@mant
 import { IoStatsChartSharp } from "react-icons/io5";
 import Image from "next/image"
 import { useEffect, useState } from "react";
+import Link from "next/link";
 export const typeColor = {
   fire: "orange",
   grass: "green",
@@ -72,7 +73,7 @@ export default function PokemonCard({ name }: { name: string }) {
             </Group>
           </Stack>
 
-          <Button size="md" color="teal.4" fullWidth mt="xs" radius="md" rightSection={<IoStatsChartSharp />}>
+          <Button size="md" color="teal.4" fullWidth mt="xs" radius="md" rightSection={<IoStatsChartSharp />} component={Link} href={`/pokemon/${name}`}>
             Stats
           </Button>
         </Stack>

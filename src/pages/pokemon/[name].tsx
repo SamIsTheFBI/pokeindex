@@ -1,9 +1,8 @@
-import { AppShell, Badge, Box, Button, Center, Container, Flex, Group, Paper, SimpleGrid, Skeleton, Stack, Text, Title } from "@mantine/core"
+import { AppShell, Badge, Button, Container, Flex, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core"
 import Image from "next/image"
 import Link from "next/link"
 import { TbPokeball } from "react-icons/tb"
 import { VscGithubAlt } from "react-icons/vsc"
-import { GiWeight } from "react-icons/gi";
 
 export const getServerSideProps = async ({ params }: any) => {
   let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.name}`)
@@ -13,9 +12,9 @@ export const getServerSideProps = async ({ params }: any) => {
   const PokemonSpeciesData = await res.json()
 
   const filterFlavorText = (array: { flavor_text: string; language: { name: string } }[]) => {
-    for (let i = 0; i < array.length; i++) {
-      if (array[i]?.language.name === "en") {
-        let textToPush: string | undefined = array[i]?.flavor_text
+    for (const arrayElement of array) {
+      if (arrayElement?.language.name === "en") {
+        const textToPush: string | undefined = arrayElement.flavor_text
         if (textToPush !== undefined) {
           return textToPush
         }
@@ -52,13 +51,13 @@ export const typeColor = {
 
 const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact }: any) => {
   const removeEscapeCharacters = (str: string) => {
-    let str2 = str.replace(/[\n\f\t]/g, " ");
-    return str2.replace(/POKéMON/g, "Pokémon")
+    const noEscapeChars = str.replace(/[\n\f\t]/g, " ");
+    return noEscapeChars.replace(/POKéMON/g, "Pokémon")
   }
 
-  const baseStats = pokemon.stats.map(
-    (stat: { base_stat: number }) => stat.base_stat
-  );
+  // const baseStats = pokemon.stats.map(
+  //   (stat: { base_stat: number }) => stat.base_stat
+  // );
 
   return (
     <AppShell

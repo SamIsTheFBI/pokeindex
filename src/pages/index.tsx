@@ -33,7 +33,7 @@ export default function Home({ data }: { data: any }) {
       </AppShell.Header>
       <AppShell.Main>
         <Stack mx="auto" px="md" justify="center" align="left">
-          <Container>
+          <Container size="sm">
             <Title>PokeIndex</Title>
             <Text mb="md" c="dark.5">
               A simple Pokedex-like web app that uses the PokeAPI to display information on different Pokemon. Made with NextJS & Mantine.

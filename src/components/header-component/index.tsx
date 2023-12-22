@@ -1,4 +1,4 @@
-import { Button, Container, Group, Text } from "@mantine/core"
+import { Button, Group, Text } from "@mantine/core"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { VscGithubAlt } from "react-icons/vsc"

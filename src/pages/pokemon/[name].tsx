@@ -1,8 +1,6 @@
-import { AppShell, Badge, Button, Container, Flex, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core"
+import { AppShell, Badge, Container, Flex, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core"
 import Image from "next/image"
-import Link from "next/link"
-import { TbPokeball } from "react-icons/tb"
-import { VscGithubAlt } from "react-icons/vsc"
+import { HeaderComponent } from "~/components"
 
 export const getServerSideProps = async ({ params }: any) => {
   let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.name}`)
@@ -65,16 +63,7 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact }: any) => 
       padding="lg"
     >
       <AppShell.Header>
-        <Group h="100%" justify="space-between" px="lg" gap={"sm"}>
-          { /* <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" /> */}
-          <Group gap="xs">
-            <TbPokeball size={28} />
-            <Text size={"xl"} fw={900} variant="gradient" gradient={{ from: 'teal.4', to: 'cyan', deg: 45 }}>PokeIndex</Text>
-          </Group>
-          <Button size="sm" color="cyan" leftSection={<VscGithubAlt />} component={Link} href="https://github.com/samisthefbi/pokeindex">
-            Source Code
-          </Button>
-        </Group>
+        <HeaderComponent />
       </AppShell.Header>
       <AppShell.Main>
         <Container size="sm">

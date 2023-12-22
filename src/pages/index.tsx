@@ -40,11 +40,13 @@ export default function Home({ data }: { data: any }) {
             </Text>
           </Container>
         </Stack>
-        <SimpleGrid cols={{ base: 2, xs: 3, md: 6 }}>
-          {pokemons.length !== 0 && pokemons.map((pokemon: any) => {
-            return <PokemonCard name={pokemon.name} key={pokemon.id} />
-          })}
-        </SimpleGrid>
+        <Container size="xl" style={{ padding: 0 }}>
+          <SimpleGrid cols={{ base: 2, xs: 3, md: 6 }}>
+            {pokemons.length !== 0 && pokemons.map((pokemon: any, key: number) => {
+              return <PokemonCard name={pokemon.name} key={key} />
+            })}
+          </SimpleGrid>
+        </Container>
         {
           next != null &&
           <Center p="xl">

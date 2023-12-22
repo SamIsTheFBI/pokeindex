@@ -41,17 +41,17 @@ export default function PokemonCard({ name }: { name: string }) {
       <Card.Section p="xs">
         <Center>
           {
-            pokemon?.sprites?.other["official-artwork"].front_default &&
-            <Image
-              src={pokemon?.sprites?.other["official-artwork"].front_default}
-              height={160}
-              width={160}
-              quality={80}
-              object-fit="contain"
-              alt="Pokemon Image"
-            />
-            ||
-            <Skeleton height={160} width={160} />
+            pokemon?.sprites?.other["official-artwork"].front_default !== undefined ?
+              <Image
+                src={pokemon?.sprites?.other["official-artwork"].front_default}
+                height={160}
+                width={160}
+                quality={80}
+                object-fit="contain"
+                alt="Pokemon Image"
+                key={pokemon.id}
+              />
+              : <Skeleton height={160} width={160} />
           }
         </Center>
       </Card.Section>
@@ -61,15 +61,19 @@ export default function PokemonCard({ name }: { name: string }) {
           <Stack justify="center" align="center" my="xs" gap="xs">
             <Stack justify="center" align="center" gap={0}>
               <Text fw={500} tt="capitalize">{name}</Text>
-              <Text size="sm" c="dimmed">{`#${pokemon.id?.toString().padStart(4, '0')}`}</Text>
+              {
+                pokemon.id !== undefined ?
+                  <Text size="sm" c="dimmed">{`#${pokemon.id?.toString().padStart(4, '0')}`}</Text>
+                  : <Skeleton height={20} width={40} />
+              }
             </Stack>
             <Group justify="center" gap={6} align="center">
-              {pokemon.types && pokemon.types.map(({ type }: any) => {
+              {pokemon.types !== undefined ? pokemon.types.map(({ type }: any) => {
                 const typeName: keyof typeof typeColor = type.name.toString()
                 return (
                   <Badge color={`${typeColor[typeName]}`} size="sm" radius="sm" key={type.name}>{type.name}</Badge>
                 )
-              })}
+              }) : <Skeleton height={18} width={112} />}
             </Group>
           </Stack>
 

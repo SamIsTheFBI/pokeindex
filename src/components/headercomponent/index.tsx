@@ -1,7 +1,6 @@
 import { Button, Group, Text } from "@mantine/core"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { MdCatchingPokemon } from "react-icons/md";
 import { VscGithubAlt } from "react-icons/vsc"
 import Image from "next/image";
 

@@ -1,5 +1,6 @@
 import { AppShell, Badge, Container, Flex, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core"
 import Image from "next/image"
+import { NextSeo } from "next-seo"
 import { HeaderComponent } from "~/components"
 
 export const getServerSideProps = async ({ params }: any) => {
@@ -62,6 +63,30 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact }: any) => 
       header={{ height: 60 }}
       padding="lg"
     >
+      <NextSeo
+        title={`${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} - PokeIndex`}
+        description="A few facts & stats of your favorite Pokemon"
+        openGraph={{
+          url: 'https://pokeindex-one.vercel.app/',
+          title: 'PokeIndex',
+          description: 'A few facts & stats of your favorite Pokemon',
+          images: [
+            {
+              url: 'https://www.example.ie/og-image-01.jpg',
+              width: 800,
+              height: 600,
+              alt: 'Og Image Alt',
+              type: 'image/jpeg',
+            },
+          ],
+          siteName: 'PokeIndex',
+        }}
+        twitter={{
+          handle: '@samisthefbi',
+          site: '@samisthefbi',
+          cardType: 'summary_large_image',
+        }}
+      />
       <AppShell.Header>
         <HeaderComponent />
       </AppShell.Header>

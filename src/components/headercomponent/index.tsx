@@ -10,7 +10,7 @@ function HeaderComponent() {
       <motion.div
         style={{ display: "flex", justifyContent: "center" }}
         whileHover={{ scale: 1.2, rotate: 360, transition: { duration: 0.5 } }}
-        whileTap={{ scale: 0.8, rotate: -90, borderRadius: "100%" }}
+        whileTap={{ scale: 0.8, rotate: -360 }}
       >
         <Image src="/240px-Poké_Ball_icon.svg.png" height={28} width={28} alt="Pokeball" />
       </motion.div>

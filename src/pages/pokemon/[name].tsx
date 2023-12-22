@@ -1,7 +1,8 @@
-import { AppShell, Badge, Container, Flex, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core"
+import { AppShell, Badge, Blockquote, Container, Flex, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core"
 import Image from "next/image"
 import { NextSeo } from "next-seo"
 import { HeaderComponent } from "~/components"
+import { TbPokeball } from "react-icons/tb";
 
 export const getServerSideProps = async ({ params }: any) => {
   let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.name}`)
@@ -126,9 +127,10 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact }: any) => 
               }
               <Container >
                 <Stack justify="" gap="xs">
-                  <Text>
+                  <Blockquote p="md" icon={<TbPokeball size={32} />} iconSize={34} color="cyan">
                     {removeEscapeCharacters(pokemonFact)}
-                  </Text>
+                  </Blockquote>
+
                   <Text>
                     <strong>Height:</strong> {pokemon.height / 10} m
                   </Text>

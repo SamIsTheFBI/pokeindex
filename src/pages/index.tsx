@@ -1,4 +1,4 @@
-import { AppShell, Center, Container, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { Anchor, AppShell, Center, Container, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { useEffect } from "react";
 import useStore from '~/store'
 import { motion } from "framer-motion"
@@ -65,10 +65,10 @@ export default function Home({ data }: { data: any }) {
             <Group justify="center">
               <motion.div
                 style={{ display: "flex", justifyContent: "center" }}
-                whileHover={{ scale: 1.2, rotate: 360, transition: { duration: 0.5 } }}
+                whileHover={{ scale: 1.2, rotate: 360 }}
                 whileTap={{ scale: 0.8, rotate: -360 }}
               >
-                <Image src="/240px-Poké_Ball_icon.svg.png" height={42} width={42} alt="Pokeball" />
+                <Image src="/240px-Poké_Ball_icon.svg.png" height={42} width={42} alt="Pokeball" priority />
               </motion.div>
               <Text
                 fw={900}
@@ -82,7 +82,7 @@ export default function Home({ data }: { data: any }) {
               </Text>
             </Group>
             <Text my="md" c="dark.5" ta="center">
-              A simple Pokedex-like web app that uses the PokeAPI to display information on different Pokemon. Made with NextJS & Mantine.
+              A simple Pokedex-like web app that uses the <Anchor href="https://pokeapi.co/">PokeAPI</Anchor> to display information on different Pokemon. Made with <Anchor href="https://nextjs.org/">NextJS</Anchor> & <Anchor href="https://mantine.dev/">Mantine</Anchor>.
             </Text>
           </Container>
         </Stack>

@@ -1,11 +1,20 @@
 import { AppShell, Badge, Blockquote, Container, Flex, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core"
 import Image from "next/image"
 import { NextSeo } from "next-seo"
-import { HeaderComponent } from "~/components"
+import { Chart, HeaderComponent } from "~/components"
 import { TbPokeball } from "react-icons/tb";
+import Error from 'next/error'
 
 export const getServerSideProps = async ({ params }: any) => {
   let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.name}`)
+  const errorCode = res.ok ? false : res.status
+
+  if (errorCode) {
+    return {
+      props: { errorCode }
+    }
+  }
+
   const PokemonData = await res.json();
 
   res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${params.name}`)
@@ -25,7 +34,7 @@ export const getServerSideProps = async ({ params }: any) => {
   const flavorText = filterFlavorText(PokemonSpeciesData.flavor_text_entries)
 
   return {
-    props: { PokemonData, flavorText },
+    props: { PokemonData, flavorText, errorCode },
   };
 }
 
@@ -49,15 +58,26 @@ export const typeColor = {
   ghost: "#581c87",
 };
 
-const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact }: any) => {
+const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode }: any) => {
+  if (errorCode) {
+    return <div style={{ color: "black" }}><Error statusCode={errorCode} /></div>
+  }
+
   const removeEscapeCharacters = (str: string) => {
     const noEscapeChars = str.replace(/[\n\f\t]/g, " ");
     return noEscapeChars.replace(/POKéMON/g, "Pokémon")
   }
 
-  // const baseStats = pokemon.stats.map(
-  //   (stat: { base_stat: number }) => stat.base_stat
-  // );
+  const baseStats: { base_stat: number, name: string }[] = pokemon.stats.map((stat: { base_stat: number, stat: { name: string } }) => {
+    const pokemonStat = {
+      "base_stat": stat.base_stat,
+      "name": stat.stat.name.charAt(0).toUpperCase() + stat.stat.name.slice(1),
+    }
+
+    return pokemonStat
+  })
+
+  console.log(baseStats)
 
   return (
     <AppShell
@@ -104,7 +124,7 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact }: any) => 
             >
               {
                 pokemon?.sprites?.other["official-artwork"].front_default &&
-                <Paper bg="gray.1" radius="md" p="lg">
+                <Paper bg="gray.1" radius="md" p="lg" withBorder>
                   <Image
                     src={pokemon?.sprites?.other["official-artwork"].front_default}
                     height={160}
@@ -112,6 +132,7 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact }: any) => 
                     quality={80}
                     object-fit="contain"
                     alt="Pokemon Image"
+                    priority
                   />
                   <Group justify="center" gap={6} align="center">
                     {pokemon.types && pokemon.types.map(({ type }: any) => {
@@ -142,8 +163,9 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact }: any) => 
                     {pokemon.abilities ? pokemon.abilities.map((item: { ability: { name: string } }) =>
                       <Badge
                         size="lg"
-                        variant="default"
+                        variant="outline"
                         style={{ textTransform: "capitalize" }}
+                        key={item.ability.name}
                       >
                         {item.ability.name}
                       </Badge>) : "???"}
@@ -151,6 +173,10 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact }: any) => 
                 </Stack>
               </Container>
             </Flex>
+            <Chart
+              name={pokemon.name !== undefined ? pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1) : ""}
+              pokemonStats={baseStats}
+            />
           </Paper>
         </Container>
       </AppShell.Main>

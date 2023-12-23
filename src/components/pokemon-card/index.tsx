@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useEffect, useState } from "react";
 import Link from "next/link";
 export const typeColor = {
+  dark: "#775544",
   fire: "orange",
   grass: "green",
   electric: "#ffce6b",

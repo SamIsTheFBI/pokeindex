@@ -39,6 +39,7 @@ export const getServerSideProps = async ({ params }: any) => {
 }
 
 export const typeColor = {
+  dark: "#775544",
   fire: "orange",
   grass: "green",
   electric: "#ffce6b",

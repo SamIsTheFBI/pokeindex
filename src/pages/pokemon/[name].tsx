@@ -1,9 +1,11 @@
-import { AppShell, Badge, Blockquote, Container, Flex, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core"
+import { AppShell, Badge, Blockquote, Button, Container, Flex, Group, Paper, Skeleton, Stack, Text, Title } from "@mantine/core"
 import Image from "next/image"
 import { NextSeo } from "next-seo"
 import { Chart, HeaderComponent } from "~/components"
 import { TbPokeball } from "react-icons/tb";
 import Error from 'next/error'
+import Link from "next/link";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
 export const getServerSideProps = async ({ params }: any) => {
   let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.name}`)
@@ -16,6 +18,25 @@ export const getServerSideProps = async ({ params }: any) => {
   }
 
   const PokemonData = await res.json();
+  const pokemonId = PokemonData.id
+
+  res = await fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${pokemonId}&limit=1`)
+  const nextError = res.ok ? false : res.status
+  let nextPokemon = null
+
+  if (!nextError) {
+    const nextData = await res.json()
+    nextPokemon = nextData.results[0] !== undefined ? nextData.results[0].name : null
+  }
+
+  res = await fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${pokemonId - 2}&limit=1`)
+  const prevError = res.ok ? false : res.status
+  let prevPokemon = null
+
+  if (!prevError) {
+    const prevData = await res.json()
+    prevPokemon = prevData.results[0] !== undefined ? prevData.results[0].name : null
+  }
 
   res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${params.name}`)
   const PokemonSpeciesData = await res.json()
@@ -31,10 +52,11 @@ export const getServerSideProps = async ({ params }: any) => {
     }
   }
 
+
   const flavorText = filterFlavorText(PokemonSpeciesData.flavor_text_entries)
 
   return {
-    props: { PokemonData, flavorText, errorCode },
+    props: { PokemonData, flavorText, errorCode, nextPokemon, prevPokemon },
   };
 }
 
@@ -59,7 +81,7 @@ export const typeColor = {
   ghost: "#581c87",
 };
 
-const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode }: any) => {
+const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode, nextPokemon, prevPokemon }: any) => {
   if (errorCode) {
     return <div style={{ color: "black" }}><Error statusCode={errorCode} /></div>
   }
@@ -77,8 +99,6 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode 
 
     return pokemonStat
   })
-
-  console.log(baseStats)
 
   return (
     <AppShell
@@ -114,8 +134,22 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode 
       </AppShell.Header>
       <AppShell.Main>
         <Container size="sm">
-          <Title ta="center" order={1} tt="capitalize">{pokemon.name}</Title>
-          <Text ta="center" size="sm" c="dimmed">{`#${pokemon.id?.toString().padStart(4, '0')}`}</Text>
+          <Group justify="space-between" align="center">
+            {
+              prevPokemon !== null ?
+                <Button color="cyan" leftSection={<FaArrowLeft />} component={Link} href={`/pokemon/${prevPokemon}`}>Prev</Button>
+                : <div>&nbsp;</div>
+            }
+            <div>
+              <Title ta="center" order={1} tt="capitalize">{pokemon.name}</Title>
+              <Text ta="center" size="sm" c="dimmed">{`#${pokemon.id?.toString().padStart(4, '0')}`}</Text>
+            </div>
+            {
+              nextPokemon !== null ?
+                <Button color="cyan" rightSection={<FaArrowRight />} component={Link} href={`/pokemon/${nextPokemon}`}>Next</Button>
+                : <div>&nbsp;</div>
+            }
+          </Group>
           <Paper shadow="xs" p="lg" mt="md" radius="md" withBorder>
             <Flex
               direction={{ base: 'column', sm: 'row' }}
@@ -148,8 +182,8 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode 
                 <Skeleton height={160} width={160} />
               }
               <Container >
-                <Stack justify="" gap="xs">
-                  <Blockquote p="md" icon={<TbPokeball size={32} />} iconSize={34} color="cyan">
+                <Stack justify="center" gap="xs">
+                  <Blockquote p="md" mt="md" icon={<TbPokeball size={32} />} iconSize={34} color="cyan">
                     {removeEscapeCharacters(pokemonFact)}
                   </Blockquote>
 

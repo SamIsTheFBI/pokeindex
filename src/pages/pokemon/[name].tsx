@@ -134,10 +134,10 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode,
       </AppShell.Header>
       <AppShell.Main>
         <Container size="sm">
-          <Group justify="space-between" align="center">
+          <Group justify="space-between" wrap="nowrap" align="center">
             {
               prevPokemon !== null ?
-                <Button color="cyan" leftSection={<FaArrowLeft />} component={Link} href={`/pokemon/${prevPokemon}`}>Prev</Button>
+                <Button size="compact-xs" color="cyan" component={Link} href={`/pokemon/${prevPokemon}`}><FaArrowLeft /></Button>
                 : <div>&nbsp;</div>
             }
             <div>
@@ -146,7 +146,7 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode,
             </div>
             {
               nextPokemon !== null ?
-                <Button color="cyan" rightSection={<FaArrowRight />} component={Link} href={`/pokemon/${nextPokemon}`}>Next</Button>
+                <Button size="compact-xs" color="cyan" component={Link} href={`/pokemon/${nextPokemon}`}><FaArrowRight /></Button>
                 : <div>&nbsp;</div>
             }
           </Group>

@@ -1,14 +1,7 @@
-import { create } from 'zustand';
+import { usePokemonStore } from "./pokemonDataStore"
+import { usePokemonList } from "./pokemonListStore"
 
-const useStore = create((set) => ({
-  pokemons: [],
-  addPokemon:
-    (pokemon: any) =>
-      set(() => ({ pokemons: pokemon })),
-  next: "",
-  setNext:
-    (next: any) =>
-      set(() => ({ next: next }))
-}))
-
-export default useStore;
+export {
+  usePokemonStore,
+  usePokemonList,
+};

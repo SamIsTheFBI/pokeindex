@@ -1,29 +1,35 @@
 import { Anchor, AppShell, Center, Container, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { useEffect } from "react";
-import useStore from '~/store'
+import { usePokemonStore, usePokemonList } from '~/store'
 import { motion } from "framer-motion"
 
 import { PokemonCard, LoaderComponent, HeaderComponent } from "~/components"
 import { NextSeo } from 'next-seo';
 import Image from 'next/image';
+import { type PokemonList, type PokemonListResults } from '~/types';
 
 export const getServerSideProps = async () => {
   const res = await fetch("https://pokeapi.co/api/v2/pokemon/?limit=12");
-  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch Pokemon list. Status: ${res.status}`)
+  }
+
+  const data: PokemonList = await res.json() as PokemonList;
   return {
     props: { data },
   };
 };
 
-export default function Home({ data }: { data: any }) {
-  const pokemons = useStore((state: any) => state.pokemons)
-  const addPokemon = useStore((state: any) => state.addPokemon)
-  const next = useStore((state: any) => state.next)
-  const setNext = useStore((state: any) => state.setNext)
+export default function Home({ data }: { data: PokemonList }) {
+  const { pokemons, addPokemon } = usePokemonStore()
+  const { next, setNext } = usePokemonList()
 
   useEffect(() => {
-    setNext(data.next)
-    addPokemon(data.results)
+    if (data.next !== null) {
+      setNext(data.next)
+    }
+    addPokemon(data.results as PokemonListResults[])
   }, [])
 
   return (
@@ -88,7 +94,7 @@ export default function Home({ data }: { data: any }) {
         </Stack>
         <Container size="xl" style={{ padding: 0 }}>
           <SimpleGrid cols={{ base: 2, xs: 3, md: 6 }}>
-            {pokemons.length !== 0 && pokemons.map((pokemon: any, key: number) => {
+            {pokemons.length !== 0 && pokemons.map((pokemon: PokemonListResults, key: number) => {
               return <PokemonCard name={pokemon.name} key={key} />
             })}
           </SimpleGrid>

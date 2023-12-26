@@ -9,6 +9,7 @@ import {
   Tooltip
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { type PokemonStat } from "~/types";
 
 ChartJS.register(
   CategoryScale,
@@ -21,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-export default function Chart({ name, pokemonStats }: { name: string, pokemonStats: { base_stat: number, name: string }[] }) {
+export default function Chart({ name, pokemonStats }: { name: string, pokemonStats: PokemonStat[] }) {
   const options = {
     responsive: true,
     maintainAspectRatio: true,

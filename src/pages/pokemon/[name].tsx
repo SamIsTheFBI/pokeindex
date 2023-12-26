@@ -6,26 +6,26 @@ import { TbPokeball } from "react-icons/tb";
 import Error from 'next/error'
 import Link from "next/link";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import { type PokemonList, type PokemonData, type PokemonSpeciesData, type PokemonType } from "~/types";
 
-export const getServerSideProps = async ({ params }: any) => {
+export const getServerSideProps = async ({ params }: { params: typeof String }) => {
   let res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.name}`)
-  const errorCode = res.ok ? false : res.status
-
-  if (errorCode) {
+  const errorCode: number = res.ok ? 0 : res.status
+  if (!res.ok) {
     return {
       props: { errorCode }
     }
   }
 
-  const PokemonData = await res.json();
-  const pokemonId = PokemonData.id
+  const pokemon: PokemonData = await res.json() as PokemonData;
+  const pokemonId = pokemon?.id
 
   res = await fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${pokemonId}&limit=1`)
   const nextError = res.ok ? false : res.status
   let nextPokemon = null
 
   if (!nextError) {
-    const nextData = await res.json()
+    const nextData: PokemonList = await res.json() as PokemonList
     nextPokemon = nextData.results[0] !== undefined ? nextData.results[0].name : null
   }
 
@@ -34,12 +34,12 @@ export const getServerSideProps = async ({ params }: any) => {
   let prevPokemon = null
 
   if (!prevError) {
-    const prevData = await res.json()
+    const prevData: PokemonList = await res.json() as PokemonList
     prevPokemon = prevData.results[0] !== undefined ? prevData.results[0].name : null
   }
 
   res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${params.name}`)
-  const PokemonSpeciesData = await res.json()
+  const pokemonSpeciesData: PokemonSpeciesData = await res.json() as PokemonSpeciesData
 
   const filterFlavorText = (array: { flavor_text: string; language: { name: string } }[]) => {
     for (const arrayElement of array) {
@@ -52,11 +52,10 @@ export const getServerSideProps = async ({ params }: any) => {
     }
   }
 
-
-  const flavorText = filterFlavorText(PokemonSpeciesData.flavor_text_entries)
+  const pokemonFact = filterFlavorText(pokemonSpeciesData.flavor_text_entries)
 
   return {
-    props: { PokemonData, flavorText, errorCode, nextPokemon, prevPokemon },
+    props: { pokemon, pokemonFact, errorCode, nextPokemon, prevPokemon },
   };
 }
 
@@ -81,9 +80,20 @@ export const typeColor = {
   ghost: "#581c87",
 };
 
-const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode, nextPokemon, prevPokemon }: any) => {
+type PokemonPageProps = {
+  pokemon: PokemonData;
+  pokemonFact: string | null;
+  errorCode: number;
+  nextPokemon: string | null;
+  prevPokemon: string | null;
+
+}
+
+const PokemonPage = ({ pokemon, pokemonFact, errorCode, nextPokemon, prevPokemon }: PokemonPageProps) => {
   if (errorCode) {
-    return <div style={{ color: "black" }}><Error statusCode={errorCode} /></div>
+    return <div style={{ color: "black" }}>
+      <Error statusCode={errorCode} />
+    </div>
   }
 
   const removeEscapeCharacters = (str: string) => {
@@ -91,22 +101,13 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode,
     return noEscapeChars.replace(/POKéMON/g, "Pokémon")
   }
 
-  const baseStats: { base_stat: number, name: string }[] = pokemon.stats.map((stat: { base_stat: number, stat: { name: string } }) => {
-    const pokemonStat = {
-      "base_stat": stat.base_stat,
-      "name": stat.stat.name.charAt(0).toUpperCase() + stat.stat.name.slice(1),
-    }
-
-    return pokemonStat
-  })
-
   return (
     <AppShell
       header={{ height: 60 }}
       padding="lg"
     >
       <NextSeo
-        title={`${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} - PokeIndex`}
+        title={`${pokemon?.name.charAt(0).toUpperCase() + pokemon?.name.slice(1)} - PokeIndex`}
         description="A few facts & stats of your favorite Pokemon"
         openGraph={{
           url: 'https://pokeindex-one.vercel.app/',
@@ -170,10 +171,10 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode,
                     priority
                   />
                   <Group justify="center" gap={6} align="center">
-                    {pokemon.types && pokemon.types.map(({ type }: any) => {
-                      const typeName: keyof typeof typeColor = type.name.toString()
+                    {pokemon.types?.map((PokemonType: PokemonType) => {
+                      const typeName: keyof typeof typeColor = PokemonType.type.name as keyof typeof typeColor
                       return (
-                        <Badge color={`${typeColor[typeName]}`} size="sm" radius="sm" key={type.name}>{type.name}</Badge>
+                        <Badge color={`${typeColor[typeName]}`} size="sm" radius="sm" key={typeName}>{typeName}</Badge>
                       )
                     })}
                   </Group>
@@ -184,7 +185,7 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode,
               <Container >
                 <Stack justify="center" gap="xs">
                   <Blockquote p="md" mt="md" icon={<TbPokeball size={32} />} iconSize={34} color="cyan">
-                    {removeEscapeCharacters(pokemonFact)}
+                    {pokemonFact !== null && removeEscapeCharacters(pokemonFact)}
                   </Blockquote>
 
                   <Text>
@@ -210,7 +211,7 @@ const PokemonPage = ({ PokemonData: pokemon, flavorText: pokemonFact, errorCode,
             </Flex>
             <Chart
               name={pokemon.name !== undefined ? pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1) : ""}
-              pokemonStats={baseStats}
+              pokemonStats={pokemon.stats}
             />
           </Paper>
         </Container>

@@ -39,6 +39,7 @@ interface PokemonList {
 
 interface PokemonData {
   id: number;
+  name: string;
   abilities: Array<PokemonAbility>;
   sprites: {
     other: {
@@ -49,6 +50,7 @@ interface PokemonData {
   };
   stats: Array<PokemonStat>;
   types: Array<PokemonType>;
+  height: number;
   weight: number;
 }
 

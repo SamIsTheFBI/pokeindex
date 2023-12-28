@@ -1,6 +1,6 @@
 <div align="center">
 
-# <samp>⚛ PokeIndex</samp>
+# <samp><a href="https://pokeindex-one.vercel.app/">⚛</a> PokeIndex</samp>
 
 <p>
 A simple Pokedex-like web app that uses the <a href="https://pokeapi.co/">PokeAPI</a> to display information on different Pokemon. Made with <a href="https://nextjs.org/">NextJS</a> & <a href="https://mantine.dev/">Mantine</a>.
